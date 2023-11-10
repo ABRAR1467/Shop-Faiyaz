@@ -1,0 +1,177 @@
+@startuml
+set namespaceSeparator ::
+
+class "shop_app::main.dart::MyApp" {
+  +Widget build()
+  +ThemeData themeForApp()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::main.dart::MyApp"
+
+class "shop_app::providers::cart.dart::CartItem" {
+  +String title
+  +String id
+  +int quantity
+  +double price
+}
+
+class "shop_app::providers::cart.dart::Cart" {
+  -Map<String, CartItem> _items
+  +Map<String, CartItem> items
+  +int itemCount
+  +double totalPrice
+  +void addItems()
+  +void removeItem()
+  +void clear()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::cart.dart::Cart"
+
+class "shop_app::providers::orders.dart::OrderItem" {
+  +String id
+  +double amount
+  +List<CartItem> orderProducts
+  +DateTime dateTime
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::orders.dart::OrderItem"
+
+class "shop_app::providers::orders.dart::Orders" {
+  -List<OrderItem> _orders
+  +List<OrderItem> orders
+  +void addOrder()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::orders.dart::Orders"
+
+class "shop_app::providers::product.dart::Product" {
+  +String id
+  +String title
+  +String description
+  +double price
+  +String imageUrl
+  +bool isFavourite
+  +void toggleFavStatus()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::product.dart::Product"
+
+class "shop_app::providers::products_provider.dart::Products" {
+  -List<Product> _items
+  +List<Product> items
+  +List<Product> favItems
+  +Product findByID()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::products_provider.dart::Products"
+
+class "shop_app::screens::cart_screen.dart::CartScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::cart_screen.dart::CartScreen"
+
+class "shop_app::screens::home_page.dart::HomePage" {
+  +State<HomePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::screens::home_page.dart::HomePage"
+
+class "shop_app::screens::home_page.dart::_HomePageState" {
+  -bool _showFavs
+  +String title
+  +Widget build()
+  +Widget giveMeABadge()
+  +List<PopupMenuEntry<FilterOptions>> makePopUpMenu()
+  +void displayDifferenceOnSelection()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "shop_app::screens::home_page.dart::_HomePageState"
+
+class "shop_app::screens::home_page.dart::FilterOptions" {
+  +int index
+  {static} +List<FilterOptions> values
+  {static} +FilterOptions favourites
+  {static} +FilterOptions all
+}
+
+"shop_app::screens::home_page.dart::FilterOptions" o-- "shop_app::screens::home_page.dart::FilterOptions"
+"dart::core::Enum" <|-- "shop_app::screens::home_page.dart::FilterOptions"
+
+class "shop_app::screens::orders_screen.dart::OrdersScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::orders_screen.dart::OrdersScreen"
+
+class "shop_app::screens::product_detail.dart::ProductDetail" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::product_detail.dart::ProductDetail"
+
+class "shop_app::widgets::badge.dart::Badge" {
+  +Widget child
+  +String value
+  +Color? color
+  +Widget build()
+}
+
+"shop_app::widgets::badge.dart::Badge" o-- "flutter::src::widgets::framework.dart::Widget"
+"shop_app::widgets::badge.dart::Badge" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::badge.dart::Badge"
+
+class "shop_app::widgets::cart_item.dart::ACartItem" {
+  +String? id
+  +String? prodId
+  +double price
+  +int quantity
+  +String title
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::cart_item.dart::ACartItem"
+
+class "shop_app::widgets::mydrawer.dart::MyDrawer" {
+  +Widget build()
+  +ListTile drawerChildCartScreen()
+  +ListTile drawerChild()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::mydrawer.dart::MyDrawer"
+
+class "shop_app::widgets::order_item.dart::AnOrderItem" {
+  +OrderItem order
+  +State<AnOrderItem> createState()
+}
+
+"shop_app::widgets::order_item.dart::AnOrderItem" o-- "shop_app::providers::orders.dart::OrderItem"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::widgets::order_item.dart::AnOrderItem"
+
+class "shop_app::widgets::order_item.dart::_AnOrderItemState" {
+  -bool _expanded
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "shop_app::widgets::order_item.dart::_AnOrderItemState"
+
+class "shop_app::widgets::products_grid.dart::ProductsGrid" {
+  +bool showOnlyFav
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::products_grid.dart::ProductsGrid"
+
+class "shop_app::widgets::product_item.dart::ProductItem" {
+  +Widget build()
+  +Consumer<Product> togglingFavs()
+  +GestureDetector imageToItsDetails()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::product_item.dart::ProductItem"
+
+
+@enduml

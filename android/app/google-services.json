@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "323947235316",
+    "project_id": "shop-faiyaz-014",
+    "storage_bucket": "shop-faiyaz-014.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323947235316:android:1770222f630c367a07dba1",
+        "android_client_info": {
+          "package_name": "com.example.shop_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoSxfKJdCzDH7vDnbIkJ-RtqzxNGL2aGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
