@@ -7,7 +7,7 @@ class ProductModel{
   int? quantity;
   bool isFavorite = false;
 
-  ProductModel({this.name, this.description, this.image, this.price, this.quantity});
+  ProductModel({this.name, this.description, this.image, this.price, this.quantity,this.isFavorite=false, this.id});
 
   ProductModel.fromJson(Map<String, dynamic> json){
     id = json['id'];
@@ -16,7 +16,7 @@ class ProductModel{
     image = json['image'];
     price = json['price'];
     quantity = json['quantity'];
-    isFavorite = json['isFavorite'];
+    isFavorite = json['is_favorite'];
   }
 
   Map<String, dynamic> toJson(){
@@ -27,7 +27,7 @@ class ProductModel{
     data['image'] = image;
     data['price'] = price;
     data['quantity'] = quantity;
-    data['isFavorite'] = this.isFavorite;
+    data['is_favorite'] = isFavorite;
     return data;
   }
 }

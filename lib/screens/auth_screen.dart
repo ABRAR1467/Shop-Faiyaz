@@ -2,8 +2,11 @@
 
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/api/auth_api.dart';
+import 'package:shop_app/screens/home_page.dart';
 
 import '../models/http_exception.dart';
 import '../providers/auth.dart';
@@ -171,12 +174,21 @@ class _AuthCardState extends State<AuthCard>
       _isLoading = true;
     });
     try {
+      User? res;
       if (_authMode == AuthMode.Login) {
-        await Provider.of<AppAuthProvider>(context, listen: false).login(
+        res = await AuthApi.signIn(
             _authData["email"].toString(), _authData["password"].toString());
       } else {
-        await Provider.of<AppAuthProvider>(context, listen: false).signUp(
+        res = await AuthApi.signUp(
             _authData["email"].toString(), _authData["password"].toString());
+      }
+
+      if (res != null) {
+        print("User is signed in");
+        // ignore: use_build_context_synchronously
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+        });
       }
 
       // Navigator.of(context).pushReplacementNamed(HomePage.routeName);
@@ -318,7 +330,6 @@ class _AuthCardState extends State<AuthCard>
                   ),
                 TextButton(
                   onPressed: _switchAuthMode,
-
                   child: Text(
                       '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
                 ),

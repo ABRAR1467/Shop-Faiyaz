@@ -18,18 +18,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    
+   
     super.initState();
+     Future.delayed(Duration(seconds: 5), () {
+      handleAuthStatus();
+    });
   }
 
   void handleAuthStatus() async {
     
     if(FirebaseAuth.instance.currentUser!=null){
       AppAuthProvider().setLoginStatus(true);
-      Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil(HomePage.routeName,(route)=>false);
     }else{
       AppAuthProvider().setLoginStatus(false);
-      Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil(AuthScreen.routeName,(route)=>false);
     }
   }
   @override

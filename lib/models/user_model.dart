@@ -4,6 +4,7 @@ class UserModel{
   String? phone;
   String? password;
   String? id;
+  List<String> favorites = [];
 
 
   UserModel({
@@ -12,6 +13,7 @@ class UserModel{
     this.phone,
     this.password,
     this.id,
+    this.favorites = const []
   });
 
   UserModel.fromJson(Map<String, dynamic> json){
@@ -20,6 +22,7 @@ class UserModel{
     phone = json['phone'];
     password = json['password'];
     id = json['uId'];
+    // favorites = json['favorites'].cast<String>();
   }
 
   Map<String, dynamic> toMap(){
@@ -29,6 +32,7 @@ class UserModel{
       'phone': phone,
       'password': password,
       'uId': id,
+      'favorites': favorites
     };
   }
 }

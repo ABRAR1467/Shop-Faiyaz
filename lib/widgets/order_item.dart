@@ -1,19 +1,20 @@
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
+import "package:shop_app/models/order_model.dart";
 import "dart:math";
 
 import "../providers/orders.dart";
 
-class AnOrderItem extends StatefulWidget {
-  const AnOrderItem({Key? key, required this.order}) : super(key: key);
+class OrderItem extends StatefulWidget {
+  const OrderItem({Key? key, required this.order}) : super(key: key);
 
-  final OrderItem order;
+  final OrderModel order;
 
   @override
-  State<AnOrderItem> createState() => _AnOrderItemState();
+  State<OrderItem> createState() => _OrderItemState();
 }
 
-class _AnOrderItemState extends State<AnOrderItem> {
+class _OrderItemState extends State<OrderItem> {
   var _expanded = true;
 
   @override
@@ -21,7 +22,7 @@ class _AnOrderItemState extends State<AnOrderItem> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: _expanded
-          ? min(widget.order.orderProducts.length * 20.0 + 102, 220)
+          ? min((widget.order.products?.length??0) * 20.0 + 102, 220)
           : 95,
       child: Card(
         color: Colors.orange,
@@ -30,10 +31,12 @@ class _AnOrderItemState extends State<AnOrderItem> {
           children: [
             ListTile(
               title: Text(
-                widget.order.amount.toString(),
+                widget.order.total.toString()??"n/a]",
               ),
               subtitle: Text(
-                DateFormat("dd/MM/yyyy hh::mm").format(widget.order.dateTime),
+              DateFormat("dd/MM/yyyy hh:mm").format(DateTime.parse(widget.order.createdAt??"")),
+              
+              
               ),
               trailing: IconButton(
                 onPressed: () {
@@ -49,23 +52,24 @@ class _AnOrderItemState extends State<AnOrderItem> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               color: Colors.black26,
               height: _expanded
-                  ? min(widget.order.orderProducts.length * 20.0 + 10, 100)
+                  ? min((widget.order.products?.length??0) * 20.0 + 10, 100)
                   : 0,
               child: ListView(
-                children: widget.order.orderProducts
-                    .map(
-                      (prod) => Row(
+                children: widget.order.products?.map(
+                      (prod) {
+                        int index = widget.order.products?.indexWhere((e) => e.id == prod.id)??0;
+                        return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            prod.title,
+                            prod.name??"[n/a]",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "${prod.quantity}x \$${prod.price}",
+                            "${widget.order.quantities?[index].toString()??"0"}x \$${prod.price?.toString()??"0"}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -73,9 +77,8 @@ class _AnOrderItemState extends State<AnOrderItem> {
                             ),
                           )
                         ],
-                      ),
-                    )
-                    .toList(),
+                      );},
+                    ).toList()??[],
               ),
             )
           ],

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/userproducts_screen.dart';
-
+import 'package:shop_app/api/auth_api.dart';
+import 'package:shop_app/helpers/utility.dart';
+import 'package:shop_app/screens/auth_screen.dart';
+import 'package:shop_app/screens/home_page.dart';
 import '../providers/auth.dart';
 import '../screens/cart_screen.dart';
 import '../screens/orders_screen.dart';
@@ -23,7 +25,7 @@ class MyDrawer extends StatelessWidget {
             context,
             Icons.shop,
             "Shop",
-            "/",
+            HomePage.routeName,
           ),
           const Divider(),
           drawerChildPushReplacementNamed(
@@ -39,20 +41,15 @@ class MyDrawer extends StatelessWidget {
             "Your Cart",
             CartScreen.routeName,
           ),
-          const Divider(),
-          drawerChildPushNamed(
-            context,
-            Icons.edit,
-            "User Products",
-            UserProductsScreen.routeName,
-          ),
+
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("LogOut"),
             onTap: () {
-              Navigator.of(context).pop();
-              Provider.of<AppAuthProvider>(context, listen: false).logout();
+              AuthApi.signOut();
+              Navigator.of(context).popAndPushNamed(AuthScreen.routeName,);
+              
             },
           )
         ],

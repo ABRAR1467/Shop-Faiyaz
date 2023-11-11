@@ -66,7 +66,7 @@ class HomePageState extends State<HomePage> {
           ),
           Consumer<CartProvider>(
             builder: (_, cart, ch) => BadgeWidget(
-              value: cart.products.length.toString() ?? "0",
+              value: cart.cartsItems.length.toString() ?? "0",
               child: ch!,
             ),
             child: IconButton(
@@ -86,7 +86,11 @@ class HomePageState extends State<HomePage> {
               child: LoadingAnimationWidget.staggeredDotsWave(
                   color: Colors.black, size: 40),
             )
-          : ProductsGrid(showFavs: _showOnlyFavorites),
+          : RefreshIndicator(
+              onRefresh: ()=>ProductApi.getProducts(),
+              
+              child: ProductsGrid(showFavs: _showOnlyFavorites),
+            ),
     );
   }
 }

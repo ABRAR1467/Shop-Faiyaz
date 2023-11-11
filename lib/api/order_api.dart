@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shop_app/api/auth_api.dart';
 import 'package:shop_app/api/product_api.dart';
 import 'package:shop_app/models/order_model.dart';
 import 'package:shop_app/models/product_model.dart';
@@ -7,12 +9,15 @@ import 'package:shop_app/providers/orders.dart';
 class OrderApi {
   static final collectionRef = FirebaseFirestore.instance.collection('orders');
 
-  static Future<bool> addOrder({required OrderModel}) async {
+  static Future<bool> addOrder({required OrderModel orderModel}) async {
     OrderProvider().setLoader(true);
     try {
       final id = collectionRef.doc().id;
-      OrderModel.id = id;
-      await collectionRef.add(OrderModel.toJson());
+      orderModel.id = id;
+      orderModel.userId = FirebaseAuth.instance.currentUser!.uid;
+      orderModel.createdAt = DateTime.now().toString();
+      await collectionRef.doc(id).set(orderModel.toJson());
+  
       OrderProvider().setLoader(false);
       return true;
     } catch (e) {
@@ -22,10 +27,13 @@ class OrderApi {
     }
   }
 
-  static Future<List<OrderModel>?> getOrders() async {
+  static Future<List<OrderModel>?> getOrders({String? userId}) async {
     OrderProvider().setLoader(true);
+    if(userId==null){
+      userId = FirebaseAuth.instance.currentUser!.uid;
+    }
     try {
-      final snapshot = await collectionRef.get();
+      final snapshot = await collectionRef.where('user_id', isEqualTo: userId).get();
       List<OrderModel> orders = [];
       for (var order in snapshot.docs) {
         final products = <ProductModel>[];
@@ -37,9 +45,11 @@ class OrderApi {
             products.add(product);
           }
         }
+
         orders.add(OrderModel.fromJson(order.data(), products));
       }
       OrderProvider().setLoader(false);
+      OrderProvider().setOrders(orders);
       return orders;
     } catch (e) {
       OrderProvider().setLoader(false);

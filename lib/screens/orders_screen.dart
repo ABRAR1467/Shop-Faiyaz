@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import "package:shop_app/api/order_api.dart";
 import 'package:shop_app/widgets/mydrawer.dart';
 
 import "../providers/orders.dart";
@@ -16,7 +17,14 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   Future<void> _refresh(BuildContext context) async {
-    await Provider.of<Orders>(context, listen: false).fetchAndSetOrder();
+    await OrderApi.getOrders();
+  }
+
+  @override
+  void initState() {
+    OrderApi.getOrders();
+    super.initState();
+    // Provider.of<Orders>(context, listen: false).fetchAndSetOrder();
   }
 
   @override
@@ -27,29 +35,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
       appBar: AppBar(title: const Text("Added Orders")),
       body: RefreshIndicator(
         onRefresh: () => _refresh(context),
-        child: FutureBuilder(
-          future:
-              Provider.of<Orders>(context, listen: false).fetchAndSetOrder(),
-          builder: (context, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (dataSnapshot.error != null) {
-              return const Center(child: Text("An error occured"));
-            } else {
-              return Consumer<Orders>(
-                builder: (context, ordersData, child) {
-                  return ListView.builder(
-                    itemCount: ordersData.orders.length,
-                    itemBuilder: (context, index) {
-                      return AnOrderItem(
-                        order: ordersData.orders[index],
-                      );
-                    },
-                  );
-                },
-              );
-            }
-          },
+        child: Consumer<OrderProvider>(
+          builder: ((context, orderProvider, child) {
+            if(orderProvider.loader) return const Center(child: CircularProgressIndicator(),);
+            if(orderProvider.orders.isEmpty) return const Center(child: Text("No Orders"),);
+            return ListView.builder(
+              itemCount: orderProvider.orders.length,
+              itemBuilder: (context, index) {
+                return OrderItem(
+                  order: orderProvider.orders[index],
+                );
+              },
+            );
+          }),
         ),
       ),
       drawer: const MyDrawer(),

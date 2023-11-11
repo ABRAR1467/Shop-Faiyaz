@@ -1,46 +1,34 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-class CustomRoute<T> extends MaterialPageRoute<T> {
-  CustomRoute({required WidgetBuilder builder, required RouteSettings settings})
+class CustomRoute extends PageRouteBuilder {
+  final Widget page;
+  @override
+  final RouteSettings settings;
+  CustomRoute({required this.page, required this.settings})
       : super(
-          builder: builder,
-          settings: settings,
-        );
+    pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        ) =>
+    page,
+    settings: settings,
+    transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+        ) =>
+        SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        ),
+  );
 
   @override
-  Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    if (settings.name == "/") {
-      return child;
-    }
-
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
-  }
-}
-
-class CustomPageTransitionBuilder extends PageTransitionsBuilder {
-  @override
-  Widget buildTransitions<T>(
-    PageRoute<T> route,
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    if (route.settings.name == "/") {
-      return child;
-    }
-
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
-  }
+  // TODO: implement transitionDuration
+  Duration get transitionDuration => const Duration(microseconds: 0);
 }

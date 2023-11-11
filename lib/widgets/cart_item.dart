@@ -1,28 +1,20 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/cart_model.dart';
+import 'package:shop_app/models/product_model.dart';
 import 'package:shop_app/providers/cart.dart';
 
 class ACartItem extends StatelessWidget {
-  const ACartItem(
-      {Key? key,
-      required this.id,
-      required this.price,
-      required this.quantity,
-      required this.title,
-      this.prodId})
+ ACartItem({Key? key,required this.cart})
       : super(key: key);
-
-  final String? id;
-  final String? prodId;
-  final double price;
-  final int quantity;
-  final String title;
+  
+  CartModel cart;
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       direction: DismissDirection.endToStart,
-      key: ValueKey(id),
+      key: ValueKey(cart.product.id),
       background: Container(
         color: Colors.red,
         child: Container(
@@ -34,7 +26,8 @@ class ACartItem extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).removeItem(prodId);
+        CartProvider().removeProduct(cart.product);
+        // Provider.of<Cart>(context, listen: false).removeItem(prodId);
       },
       confirmDismiss: (direcion) {
         return showDialog(
@@ -42,7 +35,7 @@ class ACartItem extends StatelessWidget {
           builder: (context) => AlertDialog(
             title: const Text("Are you sure?"),
             content: Text(
-                "Do you want to remove ${title.toUpperCase()} from the cart? "),
+                "Do you want to remove ${cart.product.name?.toUpperCase()??"[n/a]"} from the cart? "),
             actions: [
               TextButton(
                 onPressed: () {
@@ -69,14 +62,14 @@ class ACartItem extends StatelessWidget {
               backgroundColor: Colors.orange,
               child: FittedBox(
                 child: Text(
-                  price.toString(),
+                  cart.product?.price?.toString()??"[n/a]",
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             ),
-            title: Text(title.toString()),
-            subtitle: Text("Total: ${price * quantity}"),
-            trailing: Text("${quantity}x"),
+            title: Text(cart.product?.name?.toString()??"[n/a]"),
+            subtitle: Text("Total: ${((cart.product.price??0) * (cart.quantity??0)).toStringAsFixed(2)}"),
+            trailing: Text("${cart.quantity?.toString()??"[n/a]"}x"),
           ),
         ),
       ),

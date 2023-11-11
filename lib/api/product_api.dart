@@ -8,6 +8,7 @@ class ProductApi {
 
   static Future<List<ProductModel>?> getProducts() async {
     final snapshot = await collectionRef.get();
+    print("snapshot.docs.length ${snapshot.docs.length}");
     ProductProvider().setLoader(true);
     try {
       final products = snapshot.docs
@@ -53,6 +54,7 @@ class ProductApi {
     try {
       await collectionRef.doc(productModel.id).update(productModel.toJson());
       ProductProvider().setLoader(false);
+      getProducts();
       return true;
     } catch (e) {
       ProductProvider().setLoader(false);
