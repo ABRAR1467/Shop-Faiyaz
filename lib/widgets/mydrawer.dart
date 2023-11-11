@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/api/auth_api.dart';
 import 'package:shop_app/helpers/utility.dart';
 import 'package:shop_app/screens/auth_screen.dart';
+import 'package:shop_app/screens/coe_product_screen.dart';
+import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/home_page.dart';
 import '../providers/auth.dart';
 import '../screens/cart_screen.dart';
@@ -41,17 +44,31 @@ class MyDrawer extends StatelessWidget {
             "Your Cart",
             CartScreen.routeName,
           ),
-
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("LogOut"),
             onTap: () {
               AuthApi.signOut();
-              Navigator.of(context).popAndPushNamed(AuthScreen.routeName,);
-              
+              Navigator.of(context).popAndPushNamed(
+                AuthScreen.routeName,
+              );
             },
-          )
+          ),
+          if (FirebaseAuth.instance.currentUser?.uid != null &&
+              FirebaseAuth.instance.currentUser!.uid ==
+                  "XooIzEuF6zQqgyq9WBGcimr5xiZ2")
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text("Add Product"),
+              onTap: () {
+                // Navigator.of(context)
+                //     .pushNamed(EditProductScreen.routeName, arguments: null);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EditProductScreen(product: null,)));
+            
+                   
+              },
+            ),
         ],
       ),
     );

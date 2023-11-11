@@ -20,6 +20,7 @@ class ProductsGrid extends StatelessWidget {
         } else {
           _products = productProvider.products;
         }
+        if(productProvider.loader) return const Center(child: CircularProgressIndicator(),);
         return GridView.builder(
           padding: const EdgeInsets.all(10.0),
           itemCount: _products.length ?? 0,

@@ -7,6 +7,7 @@ import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/screens/coe_product_screen.dart';
 import 'package:shop_app/screens/product_detail.dart';
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
@@ -80,6 +81,15 @@ class MyApp extends StatelessWidget {
           case EditProductScreen.routeName:
             return CustomRoute(
               page: EditProductScreen(
+                
+                product: settings.arguments as ProductModel,
+              ),
+              settings: settings,
+            );
+
+          case COEProductSCreen.routeName:
+            return CustomRoute(
+              page: COEProductSCreen(
                 product: settings.arguments as ProductModel,
               ),
               settings: settings,

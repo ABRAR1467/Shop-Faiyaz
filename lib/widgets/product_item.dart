@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:shop_app/api/product_api.dart';
 import 'package:shop_app/models/product_model.dart';
+import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/product_detail.dart';
 
 import '../providers/auth.dart';
@@ -26,7 +28,6 @@ class ProductItem extends StatelessWidget {
         child: FadeInImage(
           placeholder: const AssetImage("assets/images/placeholder.png"),
           image: NetworkImage(
-            
             product.image ?? "",
           ),
           fit: BoxFit.cover,
@@ -60,29 +61,52 @@ class ProductItem extends StatelessWidget {
                   : Icons.favorite_border_outlined,
             ),
           ),
-          trailing: IconButton(
-            color: Colors.red,
-            onPressed: () {
-              CartProvider().addProduct(product);
+          trailing: Row(
+            children: [
+              IconButton(
+                color: Colors.red,
+                onPressed: () {
+                  CartProvider().addProduct(product);
 
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Added ${product.name ?? ""} to Cart"),
-                  duration: const Duration(milliseconds: 1400),
-                  action: SnackBarAction(
-                    label: "Undo ",
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Added ${product.name ?? ""} to Cart"),
+                      duration: const Duration(milliseconds: 1400),
+                      action: SnackBarAction(
+                        label: "Undo ",
+                        onPressed: () {
+                          CartProvider().removeProduct(product);
+                        },
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.shopping_cart_outlined),
+              ),
+              if (FirebaseAuth.instance.currentUser?.uid != null &&
+                  FirebaseAuth.instance.currentUser!.uid ==
+                      "XooIzEuF6zQqgyq9WBGcimr5xiZ2")
+                IconButton(
                     onPressed: () {
-                      CartProvider().removeProduct(product);
+                      ProductApi.deleteProduct(id: product.id!);
                     },
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.shopping_cart_outlined),
+                    icon: Icon(Icons.delete))
+            ],
           ),
         ),
-        child: imageToItsDetails(context, product),
+        child: InkWell(
+            onTap: () {
+              // if (FirebaseAuth.instance.currentUser?.uid != null &&
+              //     FirebaseAuth.instance.currentUser!.uid ==
+              //         "XooIzEuF6zQqgyq9WBGcimr5xiZ2") {
+              //   Navigator.of(context).push(MaterialPageRoute(
+              //       settings: RouteSettings(
+              //           name: EditProductScreen.routeName, arguments: product),
+              //       builder: (context) => EditProductScreen(product: product)));
+              // }
+            },
+            child: imageToItsDetails(context, product)),
       ),
     );
   }

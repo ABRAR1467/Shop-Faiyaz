@@ -35,9 +35,11 @@ class ProductApi {
     }
   }
 
-  static Future<bool> addProduct(ProductModel productModel) async {
+  static Future<bool> addProduct({required ProductModel productModel}) async {
     ProductProvider().setLoader(true);
     try {
+      String id = collectionRef.doc().id;
+      productModel.id = id;
       await collectionRef.add(productModel.toJson());
       ProductProvider().setLoader(false);
       return true;
@@ -67,6 +69,7 @@ class ProductApi {
     ProductProvider().setLoader(true);
     try {
       await collectionRef.doc(id).delete();
+      await getProducts();
       ProductProvider().setLoader(false);
       return true;
     } catch (e) {
