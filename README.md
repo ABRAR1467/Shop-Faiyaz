@@ -3,18 +3,6 @@
 
 This is a basic shop/grocery/items application with Rest API features , User Authentication where FireBase is used as a backend. 
 
-## Authors
-
-- [@Muhammad Umar Waseem](https://www.github.com/umar-waseem)
-
-
-## 🔗 Links
-[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://umar-waseem.github.io/BasicPortfolio/)
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](www.linkedin.com/in/umarwaseem)
-
-
-
-
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
